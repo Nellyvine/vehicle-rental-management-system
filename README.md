@@ -53,3 +53,13 @@ The system implements comprehensive exception handling for file operations (File
 ## Academic Note
 
 This project was developed as part of the Programming 1 course requirements, demonstrating object-oriented programming, file handling, exception management, and user input validation.
+
+## Contact Information
+
+**Team Members:**
+- Baraza Brian
+- Tako Nellyvine Mizero
+
+**Facilitator:** Yoovin Porun
+**Institution:** African Leadership College of Higher Education (ALCHE)
+**Course:** Programming 1
