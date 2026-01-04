@@ -29,3 +29,16 @@ class Rental:
         # set return date when vehicle is returned
         self.returnDate = return_date
         return True
+
+    def get_rental_details(self):
+
+        # return rental details
+        return {
+            "rentalID": self.rentalID,
+            "customerID": self.customerID,
+            "vehicleID": self.vehicleID,
+            "rentalDate": self.rentalDate,
+            "returnDate": self.returnDate,
+            "totalCost": self.totalCost
+        }
+
