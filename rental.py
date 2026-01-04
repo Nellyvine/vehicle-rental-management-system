@@ -68,3 +68,14 @@ class Rental:
             return_date = None if parts[4] == "Active" else parts[4]
             return Rental(parts[0], parts[1], parts[2], parts[3], return_date, float(parts[5]))
         return None
+
+
+    def display_details(self):
+
+        # display rental information
+        print("Rental ID:", self.rentalID)
+        print("Customer ID:", self.customerID)
+        print("Vehicle ID:", self.vehicleID)
+        print("Rental Date:", self.rentalDate)
+        print("Return Date:", self.returnDate if self.returnDate else "Not yet returned")
+        print("Total Cost:", self.totalCost)
