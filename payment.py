@@ -20,4 +20,3 @@ class Payment:
                 return False
         except ValueError as e:
             raise ValueError("Payment validation error: " + str(e))
-
