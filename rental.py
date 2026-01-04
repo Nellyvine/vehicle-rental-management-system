@@ -42,3 +42,29 @@ class Rental:
             "totalCost": self.totalCost
         }
 
+    def to_string(self):
+
+        # convert rental data to string for file storage
+        if self.returnDate is None:
+            return_date = "Active"
+        else:
+            return_date = self.returnDate
+
+        return (
+            self.rentalID + "|" +
+            self.customerID + "|" +
+            self.vehicleID + "|" +
+            self.rentalDate + "|" +
+            return_date + "|" +
+            str(self.totalCost)
+        )
+
+    @staticmethod
+    def from_string(data_string):
+
+        # create rental object from file data
+        parts = data_string.strip().split("|")
+        if len(parts) == 6:
+            return_date = None if parts[4] == "Active" else parts[4]
+            return Rental(parts[0], parts[1], parts[2], parts[3], return_date, float(parts[5]))
+        return None
