@@ -23,3 +23,9 @@ class Rental:
 
         self.totalCost = days * rental_rate
         return self.totalCost
+
+    def close_rental(self, return_date):
+
+        # set return date when vehicle is returned
+        self.returnDate = return_date
+        return True
