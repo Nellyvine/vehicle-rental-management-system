@@ -21,3 +21,12 @@ class Customer:
     def to_string(self):
         return self.customerID + "|" + self.name + "|" + self.contactDetails + "|" + self.licenseNumber
 
+
+    @staticmethod
+
+    def from_string(data_string):
+        parts = data_string.strip().split('|')
+        if len(parts) == 4:
+
+            return Customer(parts[0], parts[1], parts[2], parts[3])
+        return None
