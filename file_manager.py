@@ -13,3 +13,14 @@ class FileManager:
                     pass
             except IOError as e:
                 print(f"Error creating file {file_name}: {e}")
+
+    def write_to_file(self, data):
+
+        try:
+            with open(self.fileName, 'a') as file:
+
+                file.write(data + '\n')
+            return True
+        except IOError as e:
+            print(f"Error writing to file: {e}")
+            return False
