@@ -7,3 +7,12 @@ class Customer:
         self.name = name
         self.contactDetails = contact_details
         self.licenseNumber = license_number
+
+    def get_customer_details(self):
+
+        return {
+            'customerID': self.customerID,
+            'name': self.name,
+            'contactDetails': self.contactDetails,
+            'licenseNumber': self.licenseNumber
+        }
