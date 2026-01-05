@@ -16,3 +16,8 @@ class Customer:
             'contactDetails': self.contactDetails,
             'licenseNumber': self.licenseNumber
         }
+
+
+    def to_string(self):
+        return self.customerID + "|" + self.name + "|" + self.contactDetails + "|" + self.licenseNumber
+
