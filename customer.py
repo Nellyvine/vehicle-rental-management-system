@@ -30,3 +30,12 @@ class Customer:
 
             return Customer(parts[0], parts[1], parts[2], parts[3])
         return None
+
+    def display_details(self):
+
+        print("\n--- Customer Details ---")
+        print("Customer ID:", self.customerID)
+        print("Name:", self.name)
+        print("Contact:", self.contactDetails)
+        print("License Number:", self.licenseNumber)
+        print("------------------------")
