@@ -82,3 +82,14 @@ class FileManager:
         except IOError as e:
             print(f"Error deleting record: {e}")
             return False
+
+    def search_by_id(self, record_id):
+        try:
+            lines = self.read_from_file()
+            for line in lines:
+                if line.startswith(record_id + '|'):
+                    return line
+            return None
+        except Exception as e:
+            print(f"Error searching file: {e}")
+            return None
