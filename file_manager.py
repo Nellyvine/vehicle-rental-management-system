@@ -38,3 +38,27 @@ class FileManager:
         except IOError as e:
             print(f"Error reading file: {e}")
             return []
+
+    def update_file(self, record_id, updated_data):
+        try:
+            lines = self.read_from_file()
+            record_found = False
+
+            for i in range(len(lines)):
+                if lines[i].startswith(record_id + '|'):
+                    lines[i] = updated_data
+                    record_found = True
+                    break
+
+            if record_found:
+                with open(self.fileName, 'w') as file:
+                    for line in lines:
+                        file.write(line + '\n')
+                return True
+            else:
+                print(f"Record with ID {record_id} not found")
+                return False
+
+        except IOError as e:
+            print(f"Error updating file: {e}")
+            return False
