@@ -62,3 +62,23 @@ class FileManager:
         except IOError as e:
             print(f"Error updating file: {e}")
             return False
+
+    def delete_from_file(self, record_id):
+        try:
+            lines = self.read_from_file()
+            original_length = len(lines)
+
+            lines = [line for line in lines if not line.startswith(record_id + '|')]
+
+            if len(lines) < original_length:
+                with open(self.fileName, 'w') as file:
+                    for line in lines:
+                        file.write(line + '\n')
+                return True
+            else:
+                print(f"Record with ID {record_id} not found")
+                return False
+
+        except IOError as e:
+            print(f"Error deleting record: {e}")
+            return False
