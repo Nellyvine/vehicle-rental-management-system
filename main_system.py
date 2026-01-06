@@ -687,4 +687,87 @@ class MainSystem:
         if payment:
             payment.display_details()
 
+# REPORTING
+
+    def generate_reports(self):
+# Generates simple reports
+
+        options = [
+            "Available Vehicles Report",
+            "Active Rentals Report",
+            "Total Revenue Report",
+            "Back to Main Menu"
+        ]
+
+        choice = self.show_submenu("Generate Reports", options)
+
+        if choice == '1':
+            self.report_available_vehicles()
+        elif choice == '2':
+            self.report_active_rentals()
+        elif choice == '3':
+            self.report_total_revenue()
+
+        if choice != '4':
+            self.pause()
+
+    def report_available_vehicles(self):
+# Shows all available vehicles
+
+        print("\n--- Available Vehicles Report ---")
+        lines = self.vehicle_file.read_from_file()
+        count = 0
+
+        for line in lines:
+            if line.startswith("VehicleID|"):
+                continue
+            vehicle = Vehicle.from_string(line)
+            if vehicle and vehicle.status == "Available":
+                vehicle.display_details()
+                count += 1
+
+        print("\nTotal Available Vehicles:", count)
+
+    def report_active_rentals(self):
+# Shows all active rentals
+
+        print("\n--- Active Rentals Report ---")
+        lines = self.rental_file.read_from_file()
+        count = 0
+
+        for line in lines:
+            if line.startswith("RentalID|"):
+                continue
+            rental = Rental.from_string(line)
+            if rental and (not rental.returnDate or rental.returnDate == "Active"):
+                rental.display_details()
+                count += 1
+
+        print("\nTotal Active Rentals:", count)
+
+    def report_total_revenue(self):
+# Calculates total revenue
+
+        print("\n--- Total Revenue Report ---")
+        lines = self.rental_file.read_from_file()
+        total_revenue = 0.0
+        count = 0
+
+        for line in lines:
+            if line.startswith("RentalID|"):
+                continue
+            rental = Rental.from_string(line)
+            if rental and rental.totalCost > 0:
+                total_revenue += rental.totalCost
+                count += 1
+
+        print("Total Completed Rentals:", count)
+        print("Total Revenue: $%.2f" % total_revenue)
+
+    def exit_system(self):
+# Exits the system gracefully
+
+        self.clear_screen()
+        print("\nThank you for using Vehicle Rental Management System!")
+        print("Logging out...")
 
