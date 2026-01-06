@@ -85,7 +85,7 @@ class MainSystem:
 # Save new user
             user_data = username + "|" + password
             if self.user_file.write_to_file(user_data):
-                print("\nAccount created successfully for" + username +"!")
+                print("\nAccount created successfully for", username, "!")
                 print("You can now login with your credentials.")
                 self.pause()
                 return True
@@ -104,7 +104,7 @@ class MainSystem:
 # Authenticates existing user and checks credentials against stored user records
 
         self.clear_screen()
-        print("\n" + "*" * 60)
+        print("\n", "*" * 60)
         print("LOGIN - VEHICLE RENTAL MANAGEMENT SYSTEM")
         print("*" * 50)
 
@@ -123,7 +123,7 @@ class MainSystem:
                 stored_username, stored_password = parts
                 if stored_username == username and stored_password == password:
                     self.currentUser = username
-                    print("\nWelcome" + self.currentUser + "!")
+                    print("\nWelcome", self.currentUser, "!")
                     self.pause()
                     return True
 
@@ -139,7 +139,7 @@ class MainSystem:
 
         while attempts < max_attempts:
             self.clear_screen()
-            print("\n" + "*" * 60)
+            print("\n", "*" * 60)
             print("VEHICLE RENTAL MANAGEMENT SYSTEM")
             print("*" * 60)
             print("1. Login")
@@ -171,7 +171,7 @@ class MainSystem:
     def display_menu(self):
 # Displays the main menu options
         self.clear_screen()
-        print("\n" + "*" * 60)
+        print("\n", "*" * 60)
         print("MAIN MENU")
         print("*" * 60)
         print("1. Manage Vehicles")
@@ -204,7 +204,7 @@ class MainSystem:
                 self.pause()
             return True
         except Exception as e:
-            print("An error occurred:" + str(e))
+            print("An error occurred:", str(e))
             self.pause()
             return True
 
@@ -215,7 +215,7 @@ class MainSystem:
 
         data = file_manager.search_by_id(entity_id)
         if not data:
-            print(entity_name + "not found")
+            print(entity_name, "not found")
             return None
         return entity_class.from_string(data)
 
@@ -227,8 +227,136 @@ class MainSystem:
         self.clear_screen()
         print("\n---" + title + "---")
         for i, option in enumerate(options, 1):
-            print(i + "." + option)
+            print(i, ".", option)
         return input("Select option: ").strip()
+
+# VEHICLE MANAGEMENT
+
+    def manage_vehicles(self):
+# Submenu for vehicle operations
+
+        options = [
+            "Add New Vehicle",
+            "View All Vehicles",
+            "Update Vehicle",
+            "Remove Vehicle",
+            "Search Vehicle by ID",
+            "Back to Main Menu"
+        ]
+
+        choice = self.show_submenu("Vehicle Management", options)
+
+        if choice == '1':
+            self.add_vehicle()
+        elif choice == '2':
+            self.view_all_vehicles()
+        elif choice == '3':
+            self.update_vehicle()
+        elif choice == '4':
+            self.remove_vehicle()
+        elif choice == '5':
+            self.search_vehicle()
+
+        if choice != '6':
+            self.pause()
+
+    def add_vehicle(self):
+# Adds a new vehicle to the system
+
+        try:
+            print("\n--- Add New Vehicle ---")
+            vehicle_id = input("Enter Vehicle ID: ").strip()
+
+            if not vehicle_id or self.vehicle_file.search_by_id(vehicle_id):
+                print("Error: Invalid or duplicate Vehicle ID")
+                return
+
+            vehicle_type = input("Enter Vehicle Type (Sedan/SUV/Truck): ").strip()
+            brand = input("Enter Brand: ").strip()
+            rental_rate = float(input("Enter Rental Rate per day ($): "))
+
+            if rental_rate <= 0:
+                print("Error: Rental rate must be positive")
+                return
+
+            vehicle = Vehicle(vehicle_id, vehicle_type, brand, rental_rate)
+
+            if self.vehicle_file.write_to_file(vehicle.to_string()):
+                print("Vehicle added successfully!")
+                vehicle.display_details()
+            else:
+                print("Failed to add vehicle")
+
+        except ValueError:
+            print("Error: Invalid input. Please enter correct data types.")
+        except Exception as e:
+            print("Error:", str(e))
+
+    def view_all_vehicles(self):
+# Displays all vehicles in the system
+
+        print("\n--- All Vehicles ---")
+        lines = self.vehicle_file.read_from_file()
+
+        if not lines or len(lines) <= 1:  # Empty or only header
+            print("No vehicles found.")
+            return
+
+        for line in lines:
+            if line.startswith("VehicleID|"):  # Skip header
+                continue
+            vehicle = Vehicle.from_string(line)
+            if vehicle:
+                vehicle.display_details()
+
+    def update_vehicle(self):
+# Updates vehicle information
+
+        try:
+            vehicle_id = input("Enter Vehicle ID to update: ").strip()
+            vehicle = self.get_entity_by_id(self.vehicle_file, vehicle_id, Vehicle, "Vehicle")
+
+            if not vehicle:
+                return
+
+            vehicle.display_details()
+
+            print("\n1. Update Rental Rate")
+            print("2. Update Vehicle Status")
+            choice = input("Select option: ")
+
+            if choice == '1':
+                new_rate = float(input("Enter new rental rate: "))
+                vehicle.rentalRate = new_rate
+            elif choice == '2':
+                print("Status: 1-Available, 2-Rented, 3-Maintenance")
+                status_map = {'1': 'Available', '2': 'Rented', '3': 'Maintenance'}
+                status_choice = input("Choice: ")
+                if status_choice in status_map:
+                    vehicle.set_availability_status(status_map[status_choice])
+
+            if self.vehicle_file.update_file(vehicle_id, vehicle.to_string()):
+                print("Vehicle updated successfully!")
+
+        except Exception as e:
+            print("Error:", str(e))
+
+    def remove_vehicle(self):
+# Removes a vehicle from the system
+
+        vehicle_id = input("Enter Vehicle ID to remove: ").strip()
+        if self.vehicle_file.delete_from_file(vehicle_id):
+            print("Vehicle removed successfully!")
+        else:
+            print("Vehicle not found")
+
+    def search_vehicle(self):
+# Searches for a vehicle by ID
+        vehicle_id = input("Enter Vehicle ID: ").strip()
+        vehicle = self.get_entity_by_id(self.vehicle_file, vehicle_id, Vehicle, "Vehicle")
+        if vehicle:
+            vehicle.display_details()
+
 
 
 
