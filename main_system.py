@@ -1,6 +1,11 @@
 # MainSystem Class, Controls overall program flow and user interaction
 
+from vehicle import Vehicle
+from customer import Customer
+from rental import Rental
+from payment import Payment
 from file_manager import FileManager
+from datetime import datetime
 import os
 
 
@@ -160,6 +165,48 @@ class MainSystem:
 
         print("\nMaximum login attempts reached. Exiting system.")
         return False
+
+# MAIN MENU SYSTEM
+
+    def display_menu(self):
+# Displays the main menu options
+        self.clear_screen()
+        print("\n" + "*" * 60)
+        print("MAIN MENU")
+        print("*" * 60)
+        print("1. Manage Vehicles")
+        print("2. Manage Customers")
+        print("3. Manage Rentals")
+        print("4. Manage Payments")
+        print("5. Generate Reports")
+        print("6. Logout")
+        print("*" * 60)
+
+
+    def handle_user_choice(self, choice):
+# Routes user to appropriate menu based on selection
+
+        try:
+            if choice == '1':
+                self.manage_vehicles()
+            elif choice == '2':
+                self.manage_customers()
+            elif choice == '3':
+                self.manage_rentals()
+            elif choice == '4':
+                self.manage_payments()
+            elif choice == '5':
+                self.generate_reports()
+            elif choice == '6':
+                return False  # Logout signal
+            else:
+                print("Invalid option. Please select 1-6.")
+                self.pause()
+            return True
+        except Exception as e:
+            print("An error occurred:" + str(e))
+            self.pause()
+            return True
 
 
 
