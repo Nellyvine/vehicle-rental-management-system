@@ -471,7 +471,140 @@ class MainSystem:
         if customer:
             customer.display_details()
 
+# RENTAL MANAGEMENT
 
+    def manage_rentals(self):
+# Submenu for rental operations
+        options = [
+            "Create New Rental",
+            "View All Rentals",
+            "Return Vehicle",
+            "Search Rental by ID",
+            "Back to Main Menu"
+        ]
+
+        choice = self.show_submenu("Rental Management", options)
+
+        if choice == '1':
+            self.create_rental()
+        elif choice == '2':
+            self.view_all_rentals()
+        elif choice == '3':
+            self.return_vehicle()
+        elif choice == '4':
+            self.search_rental()
+
+        if choice != '5':
+            self.pause()
+
+    def create_rental(self):
+# Creates a new rental transaction
+
+        try:
+            print("\n--- Create New Rental ---")
+            rental_id = input("Enter Rental ID: ").strip()
+            customer_id = input("Enter Customer ID: ").strip()
+            vehicle_id = input("Enter Vehicle ID: ").strip()
+
+            if not rental_id:
+                print("Error: Rental ID cannot be empty")
+                return
+
+# Verify customer exists
+            customer = self.get_entity_by_id(self.customer_file, customer_id, Customer, "Customer")
+            if not customer:
+                return
+
+# Verify vehicle exists and is available
+            vehicle = self.get_entity_by_id(self.vehicle_file, vehicle_id, Vehicle, "Vehicle")
+            if not vehicle:
+                return
+
+            if vehicle.status != "Available":
+                print(f"Error: Vehicle is {vehicle.status}")
+                return
+
+            rental_date = input("Enter rental date (YYYY-MM-DD) or press Enter for today: ").strip()
+            if not rental_date:
+                rental_date = datetime.now().strftime("%Y-%m-%d")
+
+            rental = Rental(rental_id, customer_id, vehicle_id, rental_date)
+
+# Mark vehicle as rented
+            vehicle.set_availability_status("Rented")
+            self.vehicle_file.update_file(vehicle_id, vehicle.to_string())
+
+            if self.rental_file.write_to_file(rental.to_string()):
+                print("Rental created successfully!")
+                rental.display_details()
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+
+    def view_all_rentals(self):
+# Displays all rentals
+
+        print("\n--- All Rentals ---")
+        lines = self.rental_file.read_from_file()
+
+        if not lines or len(lines) <= 1:
+            print("No rentals found.")
+            return
+
+        for line in lines:
+            if line.startswith("RentalID|"):
+                continue
+            rental = Rental.from_string(line)
+            if rental:
+                rental.display_details()
+
+    def return_vehicle(self):
+# Processes vehicle return
+
+        try:
+            rental_id = input("Enter Rental ID: ").strip()
+            rental = self.get_entity_by_id(self.rental_file, rental_id, Rental, "Rental")
+
+            if not rental:
+                return
+
+            if rental.returnDate and rental.returnDate != "Active":
+                print("This rental has already been closed")
+                return
+
+            return_date = input("Enter return date (YYYY-MM-DD) or press Enter for today: ").strip()
+            if not return_date:
+                return_date = datetime.now().strftime("%Y-%m-%d")
+
+            rental.close_rental(return_date)
+
+# Calculate cost
+            vehicle = self.get_entity_by_id(self.vehicle_file, rental.vehicleID, Vehicle, "Vehicle")
+            if vehicle:
+                total_cost = rental.calculate_rental_cost(vehicle.rentalRate)
+                print("\nTotal Cost: $%.2f" % total_cost)
+
+# Mark vehicle as available
+                vehicle.set_availability_status("Available")
+                self.vehicle_file.update_file(rental.vehicleID, vehicle.to_string())
+
+            self.rental_file.update_file(rental_id, rental.to_string())
+            print("Vehicle returned successfully!")
+
+        except ValueError as e:
+            print("Error:", str(e))
+        except Exception as e:
+            print("Error:", str(e))
+
+    def search_rental(self):
+# Searches for a rental by ID
+
+        rental_id = input("Enter Rental ID: ").strip()
+        rental = self.get_entity_by_id(self.rental_file, rental_id, Rental, "Rental")
+        if rental:
+            rental.display_details()
+
+# PAYMENT MANAGEMENT
 
 
 
