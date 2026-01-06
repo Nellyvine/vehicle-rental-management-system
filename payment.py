@@ -19,7 +19,7 @@ class Payment:
             else:
                 return False
         except ValueError as e:
-            raise ValueError("Payment validation error: ", + str(e))
+            raise ValueError("Payment validation error: ", str(e))
 
     def process_payment(self):
 # Processes the payment

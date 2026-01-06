@@ -8,19 +8,19 @@ class Vehicle:
         self.rentalRate = rental_rate
         self.status = status
 
-        def get_status(self):
+    def get_status(self):
 
-            # return current vehicle status
-            return self.status
+    # return current vehicle status
+        return self.status
 
-        def set_status(self, new_status):
+    def set_status(self, new_status):
 
-            # change vehicle status if valid
-            if new_status == "Available" or new_status == "Rented" or new_status == "Maintenance":
-                self.status = new_status
-                return True
-            else:
-                return False
+    # change vehicle status if valid
+        if new_status == "Available" or new_status == "Rented" or new_status == "Maintenance":
+            self.status = new_status
+            return True
+        else:
+            return False
 
     def to_file_string(self):
 
