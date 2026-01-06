@@ -52,7 +52,7 @@ class MainSystem:
     def signup(self):
 # Registers a new user in the system
         self.clear_screen()
-        print("\n", "*" * 60)
+        print("*" * 60)
         print("SIGNUP - CREATE NEW ACCOUNT")
         print("*" * 60)
 
@@ -104,7 +104,7 @@ class MainSystem:
 # Authenticates existing user and checks credentials against stored user records
 
         self.clear_screen()
-        print("\n", "*" * 60)
+        print("*" * 60)
         print("LOGIN - VEHICLE RENTAL MANAGEMENT SYSTEM")
         print("*" * 50)
 
@@ -139,7 +139,7 @@ class MainSystem:
 
         while attempts < max_attempts:
             self.clear_screen()
-            print("\n", "*" * 60)
+            print("*" * 60)
             print("VEHICLE RENTAL MANAGEMENT SYSTEM")
             print("*" * 60)
             print("1. Login")
@@ -171,7 +171,7 @@ class MainSystem:
     def display_menu(self):
 # Displays the main menu options
         self.clear_screen()
-        print("\n", "*" * 60)
+        print("*" * 60)
         print("MAIN MENU")
         print("*" * 60)
         print("1. Manage Vehicles")
