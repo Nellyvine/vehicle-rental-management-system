@@ -208,5 +208,28 @@ class MainSystem:
             self.pause()
             return True
 
+# HELPER METHODS (Reduce Repetition)
+
+    def get_entity_by_id(self, file_manager, entity_id, entity_class, entity_name):
+# Generic method to retrieve any entity by ID and reduces code duplication across vehicle/customer/rental lookups
+
+        data = file_manager.search_by_id(entity_id)
+        if not data:
+            print(entity_name + "not found")
+            return None
+        return entity_class.from_string(data)
+
+    def show_submenu(self, title, options):
+        """
+        Displays a generic submenu with given title and options
+        Returns user's choice
+        """
+        self.clear_screen()
+        print("\n---" + title + "---")
+        for i, option in enumerate(options, 1):
+            print(i + "." + option)
+        return input("Select option: ").strip()
+
+
 
 
