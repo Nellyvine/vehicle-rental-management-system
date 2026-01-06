@@ -155,7 +155,7 @@ class MainSystem:
                 attempts += 1
             elif choice == '2':
                 self.signup()
-# After signup, loop back to let them login
+# After signup, loop back to let them Login
             elif choice == '3':
                 print("\nExiting system. Goodbye!")
                 return False
@@ -352,10 +352,125 @@ class MainSystem:
 
     def search_vehicle(self):
 # Searches for a vehicle by ID
+
         vehicle_id = input("Enter Vehicle ID: ").strip()
         vehicle = self.get_entity_by_id(self.vehicle_file, vehicle_id, Vehicle, "Vehicle")
         if vehicle:
             vehicle.display_details()
+
+# CUSTOMER MANAGEMENT
+
+    def manage_customers(self):
+# Submenu for customer operations
+
+        options = [
+            "Add New Customer",
+            "View All Customers",
+            "Update Customer",
+            "Remove Customer",
+            "Search Customer by ID",
+            "Back to Main Menu"
+        ]
+
+        choice = self.show_submenu("Customer Management", options)
+
+        if choice == '1':
+            self.add_customer()
+        elif choice == '2':
+            self.view_all_customers()
+        elif choice == '3':
+            self.update_customer()
+        elif choice == '4':
+            self.remove_customer()
+        elif choice == '5':
+            self.search_customer()
+
+        if choice != '6':
+            self.pause()
+
+    def add_customer(self):
+# Adds a new customer
+
+        try:
+            print("\n--- Add New Customer ---")
+            customer_id = input("Enter Customer ID: ").strip()
+
+            if not customer_id or self.customer_file.search_by_id(customer_id):
+                print("Error: Invalid or duplicate Customer ID")
+                return
+
+            name = input("Enter Customer Name: ").strip()
+            contact = input("Enter Contact Details: ").strip()
+            license = input("Enter License Number: ").strip()
+
+            if not license:
+                print("Error: License number is required")
+                return
+
+            customer = Customer(customer_id, name, contact, license)
+
+            if self.customer_file.write_to_file(customer.to_string()):
+                print("Customer added successfully!")
+                customer.display_details()
+
+        except Exception as e:
+            print("Error:", str(e))
+
+    def view_all_customers(self):
+# Displays all customers
+
+        print("\n--- All Customers ---")
+        lines = self.customer_file.read_from_file()
+
+        if not lines or len(lines) <= 1:
+            print("No customers found.")
+            return
+
+        for line in lines:
+            if line.startswith("CustomerID|"):
+                continue
+            customer = Customer.from_string(line)
+            if customer:
+                customer.display_details()
+
+    def update_customer(self):
+# Updates customer information
+
+        try:
+            customer_id = input("Enter Customer ID to update: ").strip()
+            customer = self.get_entity_by_id(self.customer_file, customer_id, Customer, "Customer")
+
+            if not customer:
+                return
+
+            customer.display_details()
+            new_contact = input("\nEnter new contact (or press Enter to skip): ").strip()
+
+            if new_contact:
+                customer.contactDetails = new_contact
+                if self.customer_file.update_file(customer_id, customer.to_string()):
+                    print("Customer updated successfully!")
+
+        except Exception as e:
+            print("Error:", str(e))
+
+    def remove_customer(self):
+# Removes a customer
+
+        customer_id = input("Enter Customer ID to remove: ").strip()
+        if self.customer_file.delete_from_file(customer_id):
+            print("Customer removed successfully!")
+        else:
+            print("Customer not found")
+
+    def search_customer(self):
+# Searches for a customer by ID
+
+        customer_id = input("Enter Customer ID: ").strip()
+        customer = self.get_entity_by_id(self.customer_file, customer_id, Customer, "Customer")
+        if customer:
+            customer.display_details()
+
 
 
 
