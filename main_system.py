@@ -606,6 +606,85 @@ class MainSystem:
 
 # PAYMENT MANAGEMENT
 
+    def manage_payments(self):
+# Submenu for payment operations
 
+        options = [
+            "Process New Payment",
+            "View All Payments",
+            "Search Payment by ID",
+            "Back to Main Menu"
+        ]
+
+        choice = self.show_submenu("Payment Management", options)
+
+        if choice == '1':
+            self.process_new_payment()
+        elif choice == '2':
+            self.view_all_payments()
+        elif choice == '3':
+            self.search_payment()
+
+        if choice != '4':
+            self.pause()
+
+    def process_new_payment(self):
+# Processes a payment for a rental
+
+        try:
+            print("\n--- Process Payment ---")
+            payment_id = input("Enter Payment ID: ").strip()
+            rental_id = input("Enter Rental ID: ").strip()
+
+            rental = self.get_entity_by_id(self.rental_file, rental_id, Rental, "Rental")
+            if not rental:
+                return
+
+            print("Total amount due: $%.2f" % rental.totalCost)
+            amount = float(input("Enter payment amount: $"))
+
+            payment_date = input("Enter payment date (YYYY-MM-DD) or press Enter for today: ").strip()
+            if not payment_date:
+                payment_date = datetime.now().strftime("%Y-%m-%d")
+
+            payment = Payment(payment_id, rental_id, amount, payment_date)
+
+            if payment.validate_payment(rental.totalCost):
+                if payment.process_payment():
+                    if self.payment_file.write_to_file(payment.to_string()):
+                        print("Payment processed successfully!")
+                        payment.display_details()
+            else:
+                print("Error: Payment amount ($%.2f) is less than total cost ($%.2f)" % (amount, rental.totalCost))
+
+        except ValueError as e:
+            print("Error:", str(e))
+        except Exception as e:
+            print("Error:", str(e))
+
+    def view_all_payments(self):
+# Displays all payments
+
+        print("\n--- All Payments ---")
+        lines = self.payment_file.read_from_file()
+
+        if not lines or len(lines) <= 1:
+            print("No payments found.")
+            return
+
+        for line in lines:
+            if line.startswith("PaymentID|"):
+                continue
+            payment = Payment.from_string(line)
+            if payment:
+                payment.display_details()
+
+    def search_payment(self):
+# Searches for a payment by ID
+
+        payment_id = input("Enter Payment ID: ").strip()
+        payment = self.get_entity_by_id(self.payment_file, payment_id, Payment, "Payment")
+        if payment:
+            payment.display_details()
 
 
