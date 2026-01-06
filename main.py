@@ -34,7 +34,7 @@ def main():
             running = False
 
         except Exception as e:
-            print("\nUnexpected error:" + str(e))
+            print("\nUnexpected error:", str(e))
             print("Please try again or contact system administrator.")
             system.pause()
 

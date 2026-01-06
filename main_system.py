@@ -52,7 +52,7 @@ class MainSystem:
     def signup(self):
 # Registers a new user in the system
         self.clear_screen()
-        print("\n" + "*" * 60)
+        print("\n", "*" * 60)
         print("SIGNUP - CREATE NEW ACCOUNT")
         print("*" * 60)
 
