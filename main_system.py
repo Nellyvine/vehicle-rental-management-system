@@ -106,7 +106,7 @@ class MainSystem:
         self.clear_screen()
         print("*" * 60)
         print("LOGIN - VEHICLE RENTAL MANAGEMENT SYSTEM")
-        print("*" * 50)
+        print("*" * 60)
 
         username = input("Username: ").strip()
         password = input("Password: ").strip()
